@@ -1,0 +1,19 @@
+name: scrna-annotation-runner
+description: Evaluates single-cell RNA-seq marker genes and maps expression clusters to biological cell types.
+input_schema:
+  type: object
+  properties:
+    marker_genes:
+      type: array
+      items:
+        type: string
+      description: List of significantly upregulated marker genes for the target cluster.
+    tissue_context:
+      type: string
+      description: Biological tissue origin (e.g., 'peripheral blood mononuclear cells', 'tumor microenvironment', 'liver').
+    species:
+      type: string
+      description: Target organism species ('human' or 'mouse').
+      default: "human"
+  required:
+    - marker_genes

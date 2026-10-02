@@ -1,0 +1,14 @@
+name: admet-property-predictor
+description: Computes pharmacokinetic properties, Lipinski drug-likeness rules, and ADMET profiles for a given SMILES string.
+input_schema:
+  type: object
+  properties:
+    smiles:
+      type: string
+      description: Valid chemical SMILES string representing the molecule.
+    predict_toxicity:
+      type: boolean
+      description: Whether to include in silico hepatotoxicity and hERG channel liability assessments.
+      default: true
+  required:
+    - smiles

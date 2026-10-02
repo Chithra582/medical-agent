@@ -1,0 +1,18 @@
+name: protocol-workflow-synthesizer
+description: Compiles executable, reproducible wet-lab experimental protocols with reagent inventories, incubation steps, and controls.
+input_schema:
+  type: object
+  properties:
+    protocol_type:
+      type: string
+      description: Experimental protocol category (e.g., 'crispr_transfection', 'pcr_amplification', 'elisa_assay', 'western_blot').
+    target_specimen:
+      type: string
+      description: Target biological specimen or cell line (e.g., 'Jurkat T-cells', 'HEK293T').
+    reagent_scale:
+      type: string
+      description: Reaction scale or plate format (e.g., '96-well', '6-well', 'single-tube').
+      default: "96-well"
+  required:
+    - protocol_type
+    - target_specimen

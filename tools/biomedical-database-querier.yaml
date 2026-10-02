@@ -1,0 +1,18 @@
+name: biomedical-database-querier
+description: Queries biological databases (PubMed, UniProt, ChEMBL) for functional annotations, pathways, and known drug targets.
+input_schema:
+  type: object
+  properties:
+    query_term:
+      type: string
+      description: Search query term, protein name, or disease indication.
+    database:
+      type: string
+      description: Target database ('pubmed', 'uniprot', 'chembl').
+      default: "pubmed"
+    max_results:
+      type: integer
+      description: Maximum number of retrieved records.
+      default: 10
+  required:
+    - query_term

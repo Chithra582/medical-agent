@@ -1,0 +1,22 @@
+spec_version: "0.1.0"
+name: "medical-agent"
+version: "0.1.0"
+description: "General-purpose biomedical AI agent integrating LLM reasoning, retrieval-augmented planning, genomics, pharmacology, and wet-lab protocol synthesis."
+author: "Stanford SNAP / Biomni & Medical-Agent Contributors"
+license: "Apache-2.0"
+metadata:
+  domain: "Life Sciences / Biomedical AI, Genomics & Computational Biology"
+  category: "Healthcare & Life Sciences"
+  framework: "Biomni A1 / BioPython / PyTorch"
+  language: "Python"
+skills:
+  - "crispr-screen-planning"
+  - "pharmacology-admet-analysis"
+  - "scrna-seq-annotation"
+  - "biomedical-literature-retrieval"
+tools:
+  - "admet-property-predictor"
+  - "crispr-target-generator"
+  - "scrna-annotation-runner"
+  - "biomedical-database-querier"
+  - "protocol-workflow-synthesizer"
