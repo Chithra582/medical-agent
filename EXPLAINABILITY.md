@@ -11,8 +11,7 @@ This document explains the internal mechanisms, data lineage, operational bounda
 
 ## How the Agent Decides
 
-### 1. Deterministic Multi-Stage Decision Pipeline
-The agent executes biomedical research and computational biology tasks through a deterministic, 5-stage orchestration pipeline.
+# Explainability & Decision Transparency Report operates via a deterministic five-stage operational pipeline.
 
 ### 1. Decision Architecture
 
@@ -53,13 +52,31 @@ The runtime intake, state classification, evaluation, and execution tracking ope
 
 ### 2. Decision Logic & Routing Formulations
 
+Scoring
+Candidate perturbation targets and molecular designs are scored via a multi-objective bio-affinity formulation:
 
+$$S_{\text{bio}}(x) = w_1 \cdot \text{TargetAffinity}(x) + w_2 \cdot (1 - \text{OffTargetRisk}(x)) + w_3 \cdot \text{Bioavailability}(x) - w_4 \cdot \text{Toxicity}(x)$$
+
+Where:
+- $w_1 = 0.40$: Primary on-target binding/knockout efficiency.
+- $w_2 = 0.25$: Genome-wide specificity and off-target avoidance penalty.
+- $w_3 = 0.20$: Pharmacokinetic drug-likeness (Lipinski Rule of Five compliance).
+- $w_4 = 0.15$: In silico predicted hepatotoxicity or cellular cytotoxicity.
+
+Biomedical tool selection probability for research task $T$ is computed as:
+
+$$P(\text{Tool}_i \mid T) = \frac{\exp(\mathbf{u}_i^{\top} \mathbf{v}_T)}{\sum_{j=1}^{K} \exp(\mathbf{u}_j^{\top} \mathbf{v}_T)}$$
+
+Where $\mathbf{v}_T$ is the query semantic embedding and $\mathbf{u}_i$ denotes the capability vector of tool $i$.
 
 ### 3. Thresholding & Refusal Decision Criteria
 
 # Explainability & Decision Transparency Report enforces strict operational boundaries and deterministic refusal thresholds:
-- **Refusal on Policy Violation**: Requests violating boundary constraints halt with code `ERR_POLICY_VIOLATION`.
-- **Refusal on Timeout**: Executions exceeding budget limits terminate with code `ERR_EXECUTION_TIMEOUT`.
+- **Refusal on ERR_BIOSECURITY_HAZARD**: **Select Agent / Pathogen Match** halts execution with code `ERR_BIOSECURITY_HAZARD`.
+- **Refusal on ERR_NON_CLINICAL_SCOPE**: **Direct Clinical Prescribing Request** halts execution with code `ERR_NON_CLINICAL_SCOPE`.
+- **Refusal on ERR_INVALID_SMILES_STRING**: **Invalid Chemical SMILES Syntax** halts execution with code `ERR_INVALID_SMILES_STRING`.
+- **Refusal on ERR_UNKNOWN_BIOMARKER**: **Unresolvable Gene / Protein ID** halts execution with code `ERR_UNKNOWN_BIOMARKER`.
+- **Refusal on ERR_PHI_DETECTED**: **Protected Health Info (PHI) Ingestion** halts execution with code `ERR_PHI_DETECTED`.
 
 ### 4. Fallback Decision Mechanism
 
@@ -69,8 +86,8 @@ Continuous operational stability is maintained through layered fault recovery:
 ### 5. Human-in-the-Loop Governance
 
 Human operators retain sovereign authority over the multi-agent execution lifecycle:
-- **Operational Review**: Sensitive actions require operator sign-off.
-- **Audit Logging**: All decisions are recorded for auditability.
+- **Consequential Action Sign-Off**: Sensitive and consequential actions require operator sign-off.
+- **Offline Ledger Auditing**: Operators can verify execution records and state transitions offline.
 
 ---
 
@@ -81,11 +98,13 @@ Human operators retain sovereign authority over the multi-agent execution lifecy
 ### 1. Ingested Input Data
 
 The framework processes only operational data necessary to perform its functions:
-- **Input Directives**: Operational tasks and data payloads.
+- **Molecular Representations**: SMILES strings, FASTA sequences, PDB atomic coordinates.
+- **Transcriptomic Matrices**: Single-cell RNA-seq count tables (`.h5ad`, 10x Genomics matrices).
+- **Experimental Queries**: Free-text natural language hypothesis descriptions and target criteria.
 
 ### 2. Configuration & Reference Data
 
-- **Configuration Schemas**: Declarative system configuration files.
+- **Configuration Schemas**: Declarative system policy files.
 
 ### 3. Base Model & Inference Lineage
 
@@ -104,102 +123,6 @@ The framework processes only operational data necessary to perform its functions
 ## Limitations
 
 Understanding the operational boundaries and technical constraints of # Explainability & Decision Transparency Report is essential for effective deployment.
-
-### 1. Deterministic Multi-Stage Decision Pipeline
-The agent executes biomedical research and computational biology tasks through a deterministic, 5-stage orchestration pipeline.
-
-```
-+-----------------------------------------------------------------------------------+
-|                        Deterministic Biomedical Pipeline                          |
-+-----------------------------------------------------------------------------------+
-|  [Stage 1: Scientific Query Ingestion & Target Entity Resolution]                 |
-|     --> Extract gene symbols, SMILES structures, cell types, or protocol queries  |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 2: Biosecurity Verification & Governance Gate]                            |
-|     --> Screen targets against pathogen watchlists, toxin databases, & PHI rules  |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 3: Multi-Modal Biomedical Tool Dispatch]                                  |
-|     --> Route to CRISPR design, ADMET predictors, scRNA annotators, or PubMed     |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 4: Quantitative In Silico Hypothesis Scoring]                            |
-|     --> Evaluate binding affinities, off-target risks, ADMET ranges, and logFC     |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 5: Evidence Synthesis & Laboratory Protocol Formulation]                  |
-|     --> Generate reproducible bench protocols, literature citations, and warnings |
-+-----------------------------------------------------------------------------------+
-```
-
-### 2. Mathematical Decision & Affinity Scoring
-Candidate perturbation targets and molecular designs are scored via a multi-objective bio-affinity formulation:
-
-$$S_{\text{bio}}(x) = w_1 \cdot \text{TargetAffinity}(x) + w_2 \cdot (1 - \text{OffTargetRisk}(x)) + w_3 \cdot \text{Bioavailability}(x) - w_4 \cdot \text{Toxicity}(x)$$
-
-Where:
-- $w_1 = 0.40$: Primary on-target binding/knockout efficiency.
-- $w_2 = 0.25$: Genome-wide specificity and off-target avoidance penalty.
-- $w_3 = 0.20$: Pharmacokinetic drug-likeness (Lipinski Rule of Five compliance).
-- $w_4 = 0.15$: In silico predicted hepatotoxicity or cellular cytotoxicity.
-
-Biomedical tool selection probability for research task $T$ is computed as:
-
-$$P(\text{Tool}_i \mid T) = \frac{\exp(\mathbf{u}_i^{\top} \mathbf{v}_T)}{\sum_{j=1}^{K} \exp(\mathbf{u}_j^{\top} \mathbf{v}_T)}$$
-
-Where $\mathbf{v}_T$ is the query semantic embedding and $\mathbf{u}_i$ denotes the capability vector of tool $i$.
-
-### 3. Thresholding & Refusal Decision Criteria
-When queries violate biosecurity policies or biological validity bounds, execution is halted with explicit rejection codes:
-
-| Threshold Parameter | Value | Decision / Refusal Action | Error Code |
-| :--- | :--- | :--- | :--- |
-| **Select Agent / Pathogen Match** | Sequence / Entity $> 0.85$ match | Abort execution and trigger security audit | `ERR_BIOSECURITY_HAZARD` |
-| **Direct Clinical Prescribing Request** | Intent = Treatment Prescription | Refuse consultation with clinical disclaimer | `ERR_NON_CLINICAL_SCOPE` |
-| **Invalid Chemical SMILES Syntax** | RDKit parse failure | Reject query with syntax error details | `ERR_INVALID_SMILES_STRING` |
-| **Unresolvable Gene / Protein ID** | NCBI / UniProt lookup empty | Halt pipeline and request canonical HGNC symbol | `ERR_UNKNOWN_BIOMARKER` |
-| **Protected Health Info (PHI) Ingestion** | Regex match on SSN/MRN/DOB | Scrub payload and refuse un-redacted inputs | `ERR_PHI_DETECTED` |
-
-### 4. Multi-Tier Fallback Mechanisms & Human-in-the-Loop Governance
-1. **Tier 1 (Algorithmic Fallback)**: If a specialized high-throughput tool fails (e.g., deep-learning structural folding), fallback to statistical heuristics or homology modeling.
-2. **Tier 2 (External Knowledge Base Fallback)**: If local datalake embeddings lack specific target information, trigger automated NCBI Entrez or EuropePMC live API queries.
-3. **Tier 3 (Human Principal Investigator Verification)**: Any proposed experimental protocol modifying high-risk cellular assays or gene-editing vectors mandates manual sign-off by a qualified principal investigator.
-
----
-
-## The Data It Uses
-
-### 1. Ingestion Data & Input Types
-- **Molecular Representations**: SMILES strings, FASTA sequences, PDB atomic coordinates.
-- **Transcriptomic Matrices**: Single-cell RNA-seq count tables (`.h5ad`, 10x Genomics matrices).
-- **Experimental Queries**: Free-text natural language hypothesis descriptions and target criteria.
-
-### 2. Reference Benchmarks & Curated Knowledge Bases
-- **Genomic & Proteomic Databases**: UniProtKB, Ensembl, HGNC, NCBI RefSeq, PDB.
-- **Pharmacological Resources**: ChEMBL, DrugBank, PubChem, BindingDB, Tox21.
-- **Scientific Literature**: PubMed Central, BioRxiv preprints, OpenAlex citation index.
-
-### 3. Model Lineage & System Architecture
-- **Inference Models**: Claude 3.5 Sonnet / Claude 4, GPT-4o, and specialized biomedical embedders.
-- **Computational Libraries**: RDKit, BioPython, Scanpy, AnnData, SciPy, PyTorch.
-
-### 4. Data Privacy, Governance & Retention
-- **Zero Ingestion of Direct Patient PHI**: Designed exclusively for anonymized, cell line, or preclinical model data.
-- **Local Scratch Retention**: Execution caches and temporary files are purged after 14 days unless archived by the researcher.
-- **Stateless Cloud Queries**: Remote LLM API queries omit proprietary compound identities through pseudonymous identifier hashing when enabled.
-
----
-
-## Limitations
 
 ### 1. In Silico Versus In Vitro Validation Gap
 - **Limitation**: Computational affinity predictions and perturbation rankings do not guarantee functional wet-lab replication.
@@ -239,103 +162,7 @@ When queries violate biosecurity policies or biological validity bounds, executi
 | - Base model lineage & deterministic engines | Section 3 | Verified |
 | - Data privacy, retention lifecycle & MITRE/OWASP | Section 4 | Verified |
 | **Its limitations** | [Limitations](#limitations) | **Covered** |
-| - Deterministic Multi-Stage Decision Pipeline
-The agent executes biomedical research and computational biology tasks through a deterministic, 5-stage orchestration pipeline.
-
-```
-+-----------------------------------------------------------------------------------+
-|                        Deterministic Biomedical Pipeline                          |
-+-----------------------------------------------------------------------------------+
-|  [Stage 1: Scientific Query Ingestion & Target Entity Resolution]                 |
-|     --> Extract gene symbols, SMILES structures, cell types, or protocol queries  |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 2: Biosecurity Verification & Governance Gate]                            |
-|     --> Screen targets against pathogen watchlists, toxin databases, & PHI rules  |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 3: Multi-Modal Biomedical Tool Dispatch]                                  |
-|     --> Route to CRISPR design, ADMET predictors, scRNA annotators, or PubMed     |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 4: Quantitative In Silico Hypothesis Scoring]                            |
-|     --> Evaluate binding affinities, off-target risks, ADMET ranges, and logFC     |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-|  [Stage 5: Evidence Synthesis & Laboratory Protocol Formulation]                  |
-|     --> Generate reproducible bench protocols, literature citations, and warnings |
-+-----------------------------------------------------------------------------------+
-```
-
-### 2. Mathematical Decision & Affinity Scoring
-Candidate perturbation targets and molecular designs are scored via a multi-objective bio-affinity formulation:
-
-$$S_{\text{bio}}(x) = w_1 \cdot \text{TargetAffinity}(x) + w_2 \cdot (1 - \text{OffTargetRisk}(x)) + w_3 \cdot \text{Bioavailability}(x) - w_4 \cdot \text{Toxicity}(x)$$
-
-Where:
-- $w_1 = 0.40$: Primary on-target binding/knockout efficiency.
-- $w_2 = 0.25$: Genome-wide specificity and off-target avoidance penalty.
-- $w_3 = 0.20$: Pharmacokinetic drug-likeness (Lipinski Rule of Five compliance).
-- $w_4 = 0.15$: In silico predicted hepatotoxicity or cellular cytotoxicity.
-
-Biomedical tool selection probability for research task $T$ is computed as:
-
-$$P(\text{Tool}_i \mid T) = \frac{\exp(\mathbf{u}_i^{\top} \mathbf{v}_T)}{\sum_{j=1}^{K} \exp(\mathbf{u}_j^{\top} \mathbf{v}_T)}$$
-
-Where $\mathbf{v}_T$ is the query semantic embedding and $\mathbf{u}_i$ denotes the capability vector of tool $i$.
-
-### 3. Thresholding & Refusal Decision Criteria
-When queries violate biosecurity policies or biological validity bounds, execution is halted with explicit rejection codes:
-
-| Threshold Parameter | Value | Decision / Refusal Action | Error Code |
-| :--- | :--- | :--- | :--- |
-| **Select Agent / Pathogen Match** | Sequence / Entity $> 0.85$ match | Abort execution and trigger security audit | `ERR_BIOSECURITY_HAZARD` |
-| **Direct Clinical Prescribing Request** | Intent = Treatment Prescription | Refuse consultation with clinical disclaimer | `ERR_NON_CLINICAL_SCOPE` |
-| **Invalid Chemical SMILES Syntax** | RDKit parse failure | Reject query with syntax error details | `ERR_INVALID_SMILES_STRING` |
-| **Unresolvable Gene / Protein ID** | NCBI / UniProt lookup empty | Halt pipeline and request canonical HGNC symbol | `ERR_UNKNOWN_BIOMARKER` |
-| **Protected Health Info (PHI) Ingestion** | Regex match on SSN/MRN/DOB | Scrub payload and refuse un-redacted inputs | `ERR_PHI_DETECTED` |
-
-### 4. Multi-Tier Fallback Mechanisms & Human-in-the-Loop Governance
-1. **Tier 1 (Algorithmic Fallback)**: If a specialized high-throughput tool fails (e.g., deep-learning structural folding), fallback to statistical heuristics or homology modeling.
-2. **Tier 2 (External Knowledge Base Fallback)**: If local datalake embeddings lack specific target information, trigger automated NCBI Entrez or EuropePMC live API queries.
-3. **Tier 3 (Human Principal Investigator Verification)**: Any proposed experimental protocol modifying high-risk cellular assays or gene-editing vectors mandates manual sign-off by a qualified principal investigator.
-
----
-
-## The Data It Uses
-
-### 1. Ingestion Data & Input Types
-- **Molecular Representations**: SMILES strings, FASTA sequences, PDB atomic coordinates.
-- **Transcriptomic Matrices**: Single-cell RNA-seq count tables (`.h5ad`, 10x Genomics matrices).
-- **Experimental Queries**: Free-text natural language hypothesis descriptions and target criteria.
-
-### 2. Reference Benchmarks & Curated Knowledge Bases
-- **Genomic & Proteomic Databases**: UniProtKB, Ensembl, HGNC, NCBI RefSeq, PDB.
-- **Pharmacological Resources**: ChEMBL, DrugBank, PubChem, BindingDB, Tox21.
-- **Scientific Literature**: PubMed Central, BioRxiv preprints, OpenAlex citation index.
-
-### 3. Model Lineage & System Architecture
-- **Inference Models**: Claude 3.5 Sonnet / Claude 4, GPT-4o, and specialized biomedical embedders.
-- **Computational Libraries**: RDKit, BioPython, Scanpy, AnnData, SciPy, PyTorch.
-
-### 4. Data Privacy, Governance & Retention
-- **Zero Ingestion of Direct Patient PHI**: Designed exclusively for anonymized, cell line, or preclinical model data.
-- **Local Scratch Retention**: Execution caches and temporary files are purged after 14 days unless archived by the researcher.
-- **Stateless Cloud Queries**: Remote LLM API queries omit proprietary compound identities through pseudonymous identifier hashing when enabled.
-
----
-
-## Limitations
-
-### 1. In Silico Versus In Vitro Validation Gap | Section 1 | Verified |
+| - In Silico Versus In Vitro Validation Gap | Section 1 | Verified |
 | - Heavy Computational & Storage Requirements | Section 2 | Verified |
 | - Context Length Bottlenecks in Single-Cell Datasets | Section 3 | Verified |
 | - Ambiguity in Legacy Gene Synonymy | Section 4 | Verified |
